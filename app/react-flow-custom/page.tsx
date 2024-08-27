@@ -18,6 +18,7 @@ import PaymentInit from "./components/PaymentInit";
 import PaymentCountry from "./components/PaymentCountry";
 import PaymentProvider from "./components/PaymentProvider";
 import PaymentProviderSelect from "./components/PaymentProviderSelect";
+import CustomEdge from "./components/CustomEdge";
 
 const nodeTypes = {
   paymentInit: PaymentInit,
@@ -26,7 +27,10 @@ const nodeTypes = {
   paymentProviderSelect: PaymentProviderSelect,
 };
 
-type Props = {};
+const edgeTypes = {
+  customEdge: CustomEdge,
+};
+
 const WorkFlow = (props: Props) => {
   const [nodes, setNodes, onNodeChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgeChange] = useEdgesState(initialEdges);
@@ -57,6 +61,7 @@ const WorkFlow = (props: Props) => {
           onEdgesChange={onEdgeChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           colorMode={"dark"}
           fitView
           className="bg-teal-50"

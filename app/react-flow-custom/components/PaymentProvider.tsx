@@ -37,8 +37,9 @@ export default function PaymentProvider({
         // color="red"
         // bg="transparent"
         // size="small"
-        onClick={() =>
-          setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id))
+        onClick={
+          () =>
+            setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id)) //Delete Nodes
         }
       >
         <X />
