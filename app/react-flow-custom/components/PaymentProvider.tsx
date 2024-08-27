@@ -1,6 +1,7 @@
 import { Handle, NodeProps, Position, useReactFlow } from "@xyflow/react";
 import Image from "next/image";
 import { X } from "react-bootstrap-icons";
+import CustomHandle from "./CustomHandle";
 const PAYMENT_PROVIDER_IMAGE_MAP: { [code: string]: string } = {
   St: "https://cdn.worldvectorlogo.com/logos/stripe-2.svg",
   Ap: "https://cdn.worldvectorlogo.com/logos/apple-14.svg",
@@ -44,7 +45,7 @@ export default function PaymentProvider({
       >
         <X />
       </button>
-      <Handle type="target" position={Position.Left} />
+      <CustomHandle type="target" position={Position.Left} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import ReactCountryFlag from "react-country-flag";
+import CustomHandle from "./CustomHandle";
 
 export default function PaymentCountry({
   data: { currency, country, countryCode },
@@ -24,8 +25,8 @@ export default function PaymentCountry({
           <p className="text-xs">{currency}</p>
         </div>
       </div>
-      <Handle type="source" position={Position.Right} />
-      <Handle type="target" position={Position.Left} />
+      <CustomHandle type="source" position={Position.Right} />
+      <CustomHandle type="target" position={Position.Left} />
     </div>
   );
 }
