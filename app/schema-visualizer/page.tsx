@@ -19,10 +19,32 @@ const modelTypes = {
 
 const { models } = getInfoFromSchema(schema);
 
-const nodes: Node[] = models.map((model) => {
+let row = 0;
+let column = 0;
+const numModels = models.length;
+let numGrid = 1;
+
+while (1) {
+  if (numGrid ** 2 >= numModels) {
+    break;
+  }
+  numGrid++;
+}
+
+const nodes: Node[] = models.map((model, index) => {
+  const x = row * 300;
+  const y = column * 300;
+
+  if (numGrid % index === 0) {
+    column = 0;
+    row += 1;
+  } else {
+    column += 1;
+  }
+
   return {
     id: model.name,
-    position: { x: 0, y: 0 },
+    position: { x: x, y: y },
     data: model,
     type: "model",
   };
