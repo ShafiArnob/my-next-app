@@ -10,14 +10,14 @@ import {
 import React from "react";
 import "@xyflow/react/dist/base.css";
 import { getInfoFromSchema } from "./components/SchemaVisualizer.utils";
-import { schema } from "./components/SchemaVisualizer.constants";
+import { schema } from "./components/SchemaVisualizer.constants.ts";
 import ModelNode from "./components/ModelNode";
 
 const modelTypes = {
   model: ModelNode,
 };
 
-const { models } = getInfoFromSchema(schema);
+const { models, connections } = getInfoFromSchema(schema);
 
 let row = 0;
 let column = 0;
@@ -60,10 +60,20 @@ const nodes: Node[] = models.map((model, index) => {
 //   },
 // ];
 
-const edges: Edge[] = [];
+const edges: Edge[] = connections.map((connection) => {
+  const sourceId = `${connection.source}-${connection.name}`;
+  return {
+    id: sourceId,
+    source: connection.source,
+    target: connection.target,
+    sourceHandle: sourceId,
+    targetHandle: connection.target,
+    animated: true,
+  };
+});
 
 const SchemaVisualizer = () => {
-  console.log(nodes);
+  // console.log(JSON.stringify(models));
 
   return (
     <div className="h-screen w-screen bg-[#1c1c1c]">
@@ -71,7 +81,6 @@ const SchemaVisualizer = () => {
         defaultNodes={nodes}
         defaultEdges={edges}
         nodeTypes={modelTypes}
-        colorMode={"dark"}
         fitView
         fitViewOptions={{ padding: 0.4 }}
       >

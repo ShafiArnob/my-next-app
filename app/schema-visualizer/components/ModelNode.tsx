@@ -1,15 +1,18 @@
-import { NodeProps } from "@xyflow/react";
+import { Handle, NodeProps, Position } from "@xyflow/react";
 import { Model } from "./SchemaVisualizer.types";
 
 export default function ModelNode({ data }: NodeProps<Model>) {
   return (
     <div className="rounded-lg min-w-60">
+      {data.isChild && (
+        <Handle id={data.name} position={Position.Top} type="target" />
+      )}
       <div className="p-1 text-center rounded-t-lg rounded-b-none bg-[#3d5787]">
         <span className="font-bold text-white">
           <pre>{data.name}</pre>
         </span>
       </div>
-      {data.fields.map(({ type, name }, index) => (
+      {data.fields.map(({ type, name, hasConnections }, index) => (
         <div
           key={index}
           className="flex justify-between p-1 text-white even:bg-[#282828] odd:bg-[#232323]"
@@ -20,6 +23,14 @@ export default function ModelNode({ data }: NodeProps<Model>) {
           <span>
             <pre>{type}</pre>
           </span>
+          {hasConnections && (
+            <Handle
+              id={`${data.name}-${name}`}
+              type="source"
+              position={Position.Right}
+              style={{ top: 32 + 16 + 32 * index }}
+            />
+          )}
         </div>
       ))}
     </div>
