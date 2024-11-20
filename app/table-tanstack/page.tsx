@@ -6,6 +6,7 @@ import { useTableData } from "./hooks/useTableData";
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   Header,
   useReactTable,
@@ -21,6 +22,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "./types";
 import { ArrowBigDown, ArrowBigUp, EllipsisVertical } from "lucide-react";
+import { fuzzyFilter } from "./utils/Table.utils";
+import { Input } from "@/components/ui/input";
 
 const TableHeader = ({ header }: { header: Header<User, unknown> }) => {
   const isSorted = header.column.getIsSorted();
@@ -78,11 +81,29 @@ const TableTanstack = () => {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
+    globalFilterFn: fuzzyFilter,
   });
+  // console.log(table);
+
   return (
     <div className="w-screen">
       <div className="h-[98vh] flex flex-col gap-2 p-2 grow">
-        <div className="flex items-center"></div>
+        <div className="flex items-center">
+          <Input
+            type="text"
+            placeholder="Search..."
+            className="w-[300px] ml-2"
+            onChange={(e) => {
+              console.log(e.target.value);
+
+              return table.setGlobalFilter(e.target.value);
+            }}
+          />
+        </div>
         <div className="flex-1 overflow-auto">
           <table style={{ overflow: "auto" }}>
             <thead>
