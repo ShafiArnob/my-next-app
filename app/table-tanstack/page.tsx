@@ -6,17 +6,78 @@ import { useTableData } from "./hooks/useTableData";
 import {
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  Header,
   useReactTable,
 } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { User } from "./types";
+import { ArrowBigDown, ArrowBigUp, EllipsisVertical } from "lucide-react";
+
+const TableHeader = ({ header }: { header: Header<User, unknown> }) => {
+  const isSorted = header.column.getIsSorted();
+
+  return (
+    <th
+      style={{ width: header.getSize(), position: "relative" }}
+      colSpan={header.colSpan}
+    >
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <span
+            style={{
+              position: "absolute",
+              right: 4,
+              top: 10,
+              color: "black",
+            }}
+            className="menu bg-gray-700 rounded-sm"
+          >
+            <EllipsisVertical />
+          </span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-5">
+          <DropdownMenuLabel>Sort</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuCheckboxItem
+            onClick={header.column.getToggleSortingHandler()}
+          >
+            {isSorted === "desc" ? "Sort Asc" : "Sort Desc"}
+          </DropdownMenuCheckboxItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <div className="flex justify-center gap-1 items-center">
+        {header.isPlaceholder
+          ? null
+          : flexRender(header.column.columnDef.header, header.getContext())}
+        {isSorted && (
+          <div>
+            {isSorted === "desc" && <ArrowBigUp />}
+            {isSorted === "asc" && <ArrowBigDown />}
+          </div>
+        )}
+      </div>
+    </th>
+  );
+};
 
 const TableTanstack = () => {
   const { columns, data } = useTableData();
-  console.log(columns, data);
+  // console.log(columns, data);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
   return (
     <div className="w-screen">
@@ -29,20 +90,7 @@ const TableTanstack = () => {
                 return (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header, index) => {
-                      return (
-                        <th
-                          key={index}
-                          style={{ width: header.getSize() }}
-                          colSpan={header.colSpan}
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </th>
-                      );
+                      return <TableHeader key={index} header={header} />;
                     })}
                   </tr>
                 );
