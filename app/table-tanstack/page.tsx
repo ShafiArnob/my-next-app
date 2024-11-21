@@ -7,8 +7,10 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   Header,
+  Table,
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -21,9 +23,52 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { User } from "./types";
-import { ArrowBigDown, ArrowBigUp, EllipsisVertical } from "lucide-react";
+import {
+  ArrowBigDown,
+  ArrowBigUp,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  EllipsisVertical,
+} from "lucide-react";
 import { fuzzyFilter } from "./utils/Table.utils";
 import { Input } from "@/components/ui/input";
+
+const Pagination = ({ table }: { table: Table<User> }) => {
+  return (
+    <div className="flex gap-2 items-center">
+      <Button
+        onClick={() => table.firstPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        <ChevronsLeft />
+      </Button>
+      <Button
+        onClick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        <ChevronLeft />
+      </Button>
+      <Button
+        onClick={() => table.nextPage()}
+        disabled={!table.getCanNextPage()}
+      >
+        <ChevronRight />
+      </Button>
+      <Button
+        onClick={() => table.lastPage()}
+        disabled={!table.getCanNextPage()}
+      >
+        <ChevronsRight />
+      </Button>
+      <p className="text-sm">
+        Page {table.getState().pagination.pageIndex + 1} of{" "}
+        {table.getPageCount()}
+      </p>
+    </div>
+  );
+};
 
 const TableHeader = ({ header }: { header: Header<User, unknown> }) => {
   const isSorted = header.column.getIsSorted();
@@ -86,6 +131,7 @@ const TableTanstack = () => {
       fuzzy: fuzzyFilter,
     },
     globalFilterFn: fuzzyFilter,
+    getPaginationRowModel: getPaginationRowModel(),
   });
   // console.log(table);
 
@@ -106,7 +152,7 @@ const TableTanstack = () => {
         </div>
         <div className="flex-1 overflow-auto">
           <table style={{ overflow: "auto" }}>
-            <thead>
+            <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
               {table.getHeaderGroups().map((headerGroup) => {
                 return (
                   <tr key={headerGroup.id}>
@@ -158,6 +204,9 @@ const TableTanstack = () => {
               })}
             </tfoot>
           </table>
+        </div>
+        <div>
+          <Pagination table={table} />
         </div>
       </div>
     </div>

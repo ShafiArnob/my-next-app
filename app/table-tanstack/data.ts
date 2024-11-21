@@ -18,6 +18,6 @@ export function createRandomUser() {
 
 export const USERS: User[] = faker.helpers
   .multiple(createRandomUser, {
-    count: 5,
+    count: 100,
   })
   .map((data, index) => ({ ...data, id: index }));
